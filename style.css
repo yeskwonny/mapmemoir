@@ -168,10 +168,10 @@ body::after {
 @media only screen and (max-width: 800px) {
   body {
     display: grid;
-    grid-template-rows: 2fr;
+    grid-template-rows: 1fr 2fr;
     margin: 0;
     padding: 0;
-    hegiht: 100%;
+    height: 100vh;
   }
   .title {
     font-size: 3rem;
