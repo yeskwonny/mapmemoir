@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kalnia:wght@300;400;600;700&family=Rubik:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <script defer src="script.js"></script>
+    <title>MapMemoir,</title>
+  </head>
+  <body>
+    <div>
+      <h1 class="title">MapMemoir,</h1>
+      <div class="sidebar">
+        <div class="menu">
+          <div>
+            <span class="btn__sort__des"> By Latest </span>
+            <span class="btn__sort__asc"> | By Oldest </span>
+          </div>
+          <span class="btn__deleteAll">Delete All</span>
+        </div>
+        <ul class="form__list">
+          <form class="journal__form hidden">
+            <div class="form__row form__date">
+              <input class="form__input__date" type="date" />
+            </div>
+            <div class="form__row form__textarea">
+              <textarea type="submit" class="form__input__text"></textarea>
+            </div>
+            <div class="btn-container">
+              <button class="btn__clear" type="button">Clear</button>
+              <button class="btn__save" type="submit">Save</button>
+            </div>
+          </form>
+        </ul>
+      </div>
+    </div>
+    <div id="map"></div>
+  </body>
+</html>
