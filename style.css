@@ -117,6 +117,7 @@ body::after {
   background-color: rgba(255, 255, 255, 0.8);
   border: 2px solid #facf5a;
   font-family: "Kalnia";
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .journal__list {
@@ -170,7 +171,7 @@ body::after {
     grid-template-rows: 2fr;
     margin: 0;
     padding: 0;
-    hegiht: 100vh;
+    hegiht: 100%;
   }
   .title {
     font-size: 3rem;
@@ -184,10 +185,10 @@ body::after {
   }
   .sidebar {
     width: 100vw;
-    height: 50vh;
+    height: 40vh;
   }
   .form__list {
-    height: 100%;
+    height: 90%;
     overflow-y: scroll;
   }
   .journal__list {
