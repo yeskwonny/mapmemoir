@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: inherit;
   list-style: none;
+  color: rgba(0, 0, 0, 0.8);
 }
 
 html {
@@ -178,15 +179,15 @@ body::after {
   }
   #map {
     width: 100%;
-    height: 50vh;
+    height: 40vh;
     grid-area: 1/1;
   }
   .sidebar {
     width: 100vw;
-    height: 40vh;
+    height: 50vh;
   }
   .form__list {
-    height: 100vh;
+    height: 100%;
     overflow-y: scroll;
   }
   .journal__list {

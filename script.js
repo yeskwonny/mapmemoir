@@ -56,11 +56,10 @@ class App {
       );
   }
 
-
-  _loadMap(position) {
+  _loadMap(position = [-27.470125, 153.021072]) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    const coords = [latitude, longitude];
+    const coords = [-27.470125, 153.021072];
     this.#map = L.map("map").setView(coords, 13);
     L.tileLayer("https://tile.openstreetmap.de/{z}/{x}/{y}.png", {
       attribution:
