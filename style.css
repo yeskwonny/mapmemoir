@@ -118,7 +118,7 @@ body::after {
   border: 2px solid #facf5a;
   font-family: "Kalnia";
   color: rgba(0, 0, 0, 0.8);
-  font-weight: ;
+  font-weight: 400;
 }
 
 .journal__list {
@@ -200,7 +200,7 @@ body::after {
   }
   .sidebar {
     width: 100vw;
-    height: 40vh;
+    height: 70vh;
   }
   .form__list {
     height: 100%;
