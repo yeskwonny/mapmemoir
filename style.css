@@ -118,6 +118,7 @@ body::after {
   border: 2px solid #facf5a;
   font-family: "Kalnia";
   color: rgba(0, 0, 0, 0.8);
+  font-weight: ;
 }
 
 .journal__list {
@@ -172,6 +173,20 @@ body::after {
     margin: 0;
     padding: 0;
     height: 100vh;
+    overflow-y: scroll;
+  }
+
+  body::after {
+    /* background-image: url(memoir-bg.jpg);
+    content: "";
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: -1; */
+    height: 150vh;
   }
   .title {
     font-size: 3rem;
@@ -188,7 +203,7 @@ body::after {
     height: 40vh;
   }
   .form__list {
-    height: 90%;
+    height: 100%;
     overflow-y: scroll;
   }
   .journal__list {
