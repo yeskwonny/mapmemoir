@@ -22,6 +22,8 @@ class App {
   #map;
   #mapEvent;
   #list = [];
+  #marker = [];
+
   #editMenuBtn = document.addEventListener("DOMContentLoaded", () => {
     this.#editMenuBtn = document.querySelector(".edit__menu");
   });
@@ -45,6 +47,7 @@ class App {
     menu.addEventListener("click", this._clearAll.bind(this));
   }
 
+  // get current position
   _getPosition() {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(
@@ -56,39 +59,35 @@ class App {
       );
   }
 
-  _loadMap(position = [-27.470125, 153.021072]) {
+  // using position and load the map
+  _loadMap(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    const coords = [-27.470125, 153.021072];
+    const coords = [latitude, longitude];
     this.#map = L.map("map").setView(coords, 13);
     L.tileLayer("https://tile.openstreetmap.de/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       ext: "png",
     }).addTo(this.#map);
-
-    // spinner??
-    const callBack = function () {
-      alert("Your Mapmoir is ready!✨ Click the map and start your Mapmoir.");
-    };
-
-    this.#map.whenReady(callBack);
-
     this.#map.on("click", this._showForm.bind(this));
     this.#list.forEach((work) => this._renderMarker(work));
   }
 
+  // show form
   _showForm(mapE) {
     this.#mapEvent = mapE;
     form.classList.remove("hidden");
     menu.classList.remove("hidden");
   }
 
+  // hide form
   _hideForm() {
     date.value = text.value = "";
     form.classList.add("hidden");
   }
 
+  // clear input with btn
   _clearInput(e) {
     if (e.target.classList.contains("btn__clear")) {
       // Clear the form inputs
@@ -96,8 +95,11 @@ class App {
       text.value = "";
     }
   }
+
+  //create new memo
   _newMemo(e) {
     e.preventDefault();
+
     const { lat, lng } = this.#mapEvent.latlng;
     // get value from the from
     const savedDate = date.value;
@@ -105,17 +107,17 @@ class App {
 
     // create new object using the data from the form
     const memo = new Memoir([lat, lng], savedDate, savedText);
+
     this.#list.push(memo);
-    // render marker on the map
     this._renderMarker(memo);
     this._renderMemoList(memo);
-    // hidden from and clear the form
     this._hideForm();
     this._setLocalStorage();
   }
 
+  // render marker
   _renderMarker(memo) {
-    L.marker(memo.coords)
+    const newMarker = L.marker(memo.coords, { markerID: memo.id })
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -126,13 +128,16 @@ class App {
           className: "journal-popup",
         })
       )
-      .setPopupContent(`Your Memoir✨`)
+      .setPopupContent(`Your Memoir ${memo.date}✨`)
       .openPopup();
+
+    this.#marker.push(newMarker);
   }
 
+  //render memo
   _renderMemoList(memo) {
     let html = `
-    <li class="journal__list" data-id="${memo.id}">
+    <li class="journal__list" id="${memo.id}" data-id="${memo.id}">
     <div class="journal__title">
       <h2 class="journal__list--date">${memo.date}</h2>
       <div class="toggle__menu" data-id="${memo.id}">
@@ -149,6 +154,7 @@ class App {
     form.insertAdjacentHTML("afterend", html);
   }
 
+  // show edit/delete button
   _showToggleMenu(e) {
     const toggle = e.target.closest(".toggle__menu");
     if (toggle) {
@@ -158,6 +164,8 @@ class App {
       editBtn.classList.toggle("hidden");
     }
   }
+
+  //hide edit/delete button
   _hiddenToggleMenu(e) {
     const toggle = e.target.closest(".toggle__menu");
     if (toggle === null && this.#editMenuBtn !== null) {
@@ -166,58 +174,107 @@ class App {
     }
   }
 
+  //delete memo
   _deleteMemoList(e) {
     // click the delete
-    const deleteEl = e.target.closest(".toggle__menu");
+    const deleteEl = e.target.closest(".journal__list");
     if (e.target.classList.contains("btn__delete")) {
-      // console.log(e);
-      // console.log(deleteEl);
-      // if (!deleteEl) return;
-
       const updatedList = this.#list.filter(
         (item) => item.id !== deleteEl.dataset.id
       );
+      const updatedMarker = this.#marker.find(
+        (item) => item.options.markerID === deleteEl.dataset.id
+      );
 
-      //update list after delete the memo
+      deleteEl.remove();
+
+      // delete marker
+      this.#map.removeLayer(updatedMarker);
       this.#list = updatedList;
-      //update local storage
+
       this._setLocalStorage();
-      // check if there is better way reload whole page?
-      location.reload();
     }
   }
 
   _editMemolist(e) {
     const editEl = e.target.closest(".toggle__menu");
+
     if (e.target.classList.contains("btn__edit")) {
       const selectedItem = this.#list.find(
         (item) => item.id === editEl.dataset.id
       );
+
       this._showForm();
       text.value = selectedItem.text;
       date.value = selectedItem.date;
-      //update item
+
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const [lat, lng] = selectedItem.coords;
-        // get value from the from
+
         const savedDate = date.value;
         const savedText = text.value;
 
-        // create new object using the data from the form
         const updatedMemo = new Memoir([lat, lng], savedDate, savedText);
         updatedMemo.id = selectedItem.id;
+        // find updated item in the list and change it
         const indexItem = this.#list.findIndex(
           (item) => item.id === updatedMemo.id
         );
-        const newmemos = (this.#list[indexItem] = updatedMemo);
-        console.log(newmemos);
-        console.log(this.#list);
 
+        this.#list[indexItem] = updatedMemo;
         this._hideForm();
-        this._setLocalStorage();
-        location.reload();
+        this._updateMemoOnPage(updatedMemo);
+        this._setAndReload();
+
+        //TODO: instead of reload the whole page, what can be done?
       });
+    }
+  }
+
+  _updateMemoOnPage(updatedMemo) {
+    const memoElement = document.getElementById(updatedMemo.id);
+    // Update the DOM element with the new memo data
+    if (memoElement) {
+      memoElement.querySelector(".journal__list--date").textContent =
+        updatedMemo.date;
+
+      memoElement.querySelector(".journal__list--details").textContent =
+        updatedMemo.text;
+    } else {
+      console.log("Memo Element not found in DOM.");
+    }
+  }
+
+  _sortByDate(e) {
+    if (e.target.classList.contains("btn__sort__des")) {
+      const latest = this.#list.sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      this.#list = latest;
+      this._setLocalStorage();
+      location.reload();
+    }
+    if (e.target.classList.contains("btn__sort__asc")) {
+      const oldest = this.#list.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+      this.#list = oldest;
+      this._setLocalStorage();
+      location.reload();
+    }
+  }
+  _clearAll(e) {
+    e.preventDefault();
+    if (e.target.classList.contains("btn__deleteAll")) {
+      localStorage.removeItem("journals");
+      // Clear the UI by removing list items
+      const journalListItems = containerForm.querySelectorAll(".journal__list");
+      journalListItems.forEach((item) => item.remove());
+      // Clear all markers
+      this.#marker.forEach((item) => this.#map.removeLayer(item));
+      // Reset the list
+      this.#list = [];
     }
   }
 
@@ -227,10 +284,10 @@ class App {
     const clickedJournal = this.#list.find(
       (item) => item.id === journalEl.dataset.id
     );
-    this.#map.setView(clickedJournal.coords, 14, {
+    this.#map.setView(clickedJournal.coords, 13, {
       animate: true,
       pan: {
-        duration: 1,
+        duration: 0.8,
       },
     });
   }
@@ -246,32 +303,9 @@ class App {
       this.#list.forEach((item) => this._renderMemoList(item));
     }
   }
-  _sortByDate(e) {
-    if (e.target.classList.contains("btn__sort__des")) {
-      const latest = this.#list.sort(
-        (a, b) => new Date(a.date) - new Date(b.date)
-      );
-      this.#list = latest;
-      this._setLocalStorage();
-      location.reload();
-    }
-    if (e.target.classList.contains("btn__sort__asc")) {
-      const latest = this.#list.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      );
-      this.#list = latest;
-      this._setLocalStorage();
-      location.reload();
-    }
-  }
-  _clearAll(e) {
-    e.preventDefault();
-    if (e.target.classList.contains("btn__deleteAll")) {
-      this.reset();
-    }
-  }
-  reset() {
-    localStorage.removeItem("journals");
+
+  _setAndReload() {
+    this._setLocalStorage();
     location.reload();
   }
 }

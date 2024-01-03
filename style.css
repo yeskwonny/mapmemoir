@@ -201,6 +201,7 @@ body::after {
   .sidebar {
     width: 100vw;
     height: 70vh;
+    overflow-y: scroll;
   }
   .form__list {
     height: 100%;
