@@ -50,8 +50,8 @@
 Project is: complete
 
 ## Room for Improvement
--Instead of reload the whole page, find the way to rendering the updated list
--users can add a picture to remember the day.
+-Instead of reloading the whole page, find ways to render the updated list and function of uploading some pictures
+
   
 
 
