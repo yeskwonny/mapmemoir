@@ -23,6 +23,7 @@
 - HTML
 - CSS
 - JavaScript
+- Leaflet
   
 
 ## Features
