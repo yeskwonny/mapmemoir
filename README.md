@@ -41,8 +41,7 @@
 ## Setup
 - clone the git 
   https://github.com/yeskwonny/mapmemoir.git
-- git page
-  [https://yeskwonny.github.io/2023-Web-development-gym-website/index.html](https://github.com/yeskwonny/mapmemoir)
+  
 
 
 
