@@ -8,7 +8,7 @@
 
 - [Technologies Used](#technologies-used)
 - [Features](#features)
-- [Screenshots](#screenshots)
+- [Screenshots](#screenshots/Live-demo)
 - [Setup](#setup)
 - [Usage](#usage)
 - [Project Status](#project-status)
@@ -32,7 +32,7 @@
 - Delete all notes
 - Sort notes by date
 
-## Screenshots/ Live demo
+## Screenshots/Live-demo
 [LIVE DEMO](https://mapmemoir.netlify.app/)
 
 
